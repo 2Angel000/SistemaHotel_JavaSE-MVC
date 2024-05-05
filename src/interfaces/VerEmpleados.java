@@ -6,13 +6,29 @@
 package interfaces;
 
 import clases.Globales;
+import clases.Queries;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
+import modelo.Conexion;
 
 /**
  *
  * @author mcsmo
  */
 public class VerEmpleados extends javax.swing.JDialog {
+
+    PreparedStatement ps, pst;
+    Statement instruccion;
+    ResultSet rs;
+    Conexion conn = new Conexion();
+    Connection conectar = conn.getConnection();
 
     /**
      * Creates new form VerEmpleados
@@ -25,6 +41,7 @@ public class VerEmpleados extends javax.swing.JDialog {
         setIconImage(new ImageIcon(getClass().getResource("/images/selloHotel.png")).getImage());
         this.setLocationRelativeTo(null);
         AsignarNombres();
+        MostrarUsuarios();
     }
 
     public void MaximizarJDialog() {
@@ -50,13 +67,13 @@ public class VerEmpleados extends javax.swing.JDialog {
         btnBuscar = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        txtUsuario = new javax.swing.JTextField();
+        txtClave = new javax.swing.JTextField();
         btnEditar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
         btnEmpleadoEstatus = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaUsuarios = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -139,11 +156,11 @@ public class VerEmpleados extends javax.swing.JDialog {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTextField1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Cambiar Usuario", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        txtUsuario.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtUsuario.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Cambiar Usuario", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
-        jTextField2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jTextField2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Cambiar Clave", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        txtClave.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtClave.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Cambiar Clave", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
         btnEditar.setBackground(new java.awt.Color(0, 51, 102));
         btnEditar.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
@@ -169,9 +186,9 @@ public class VerEmpleados extends javax.swing.JDialog {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtClave, javax.swing.GroupLayout.PREFERRED_SIZE, 365, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -185,8 +202,8 @@ public class VerEmpleados extends javax.swing.JDialog {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-                    .addComponent(jTextField2)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                    .addComponent(txtClave)
                     .addComponent(btnEmpleadoEstatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnActualizar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnEditar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -195,10 +212,10 @@ public class VerEmpleados extends javax.swing.JDialog {
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setBackground(new java.awt.Color(255, 255, 255));
-        jTable1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        jTable1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaUsuarios.setBackground(new java.awt.Color(255, 255, 255));
+        TablaUsuarios.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        TablaUsuarios.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        TablaUsuarios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -209,8 +226,9 @@ public class VerEmpleados extends javax.swing.JDialog {
                 "ID", "Id Empleado", "Nombre Empleado", "Usuario", "Contraseña"
             }
         ));
-        jTable1.setSelectionBackground(new java.awt.Color(102, 153, 255));
-        jScrollPane1.setViewportView(jTable1);
+        TablaUsuarios.setRowHeight(20);
+        TablaUsuarios.setSelectionBackground(new java.awt.Color(102, 153, 255));
+        jScrollPane1.setViewportView(TablaUsuarios);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -319,6 +337,7 @@ public class VerEmpleados extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaUsuarios;
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnBuscar;
@@ -331,13 +350,12 @@ public class VerEmpleados extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel lblEmpleados;
     private javax.swing.JTextField txtBuscar;
+    private javax.swing.JTextField txtClave;
+    private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
-private void AsignarNombres(){
+private void AsignarNombres() {
         btnAtras.setText(Globales.atras);
         btnEditar.setText(Globales.editar);
         btnActualizar.setText(Globales.actualizar);
@@ -345,5 +363,35 @@ private void AsignarNombres(){
         btnBuscar.setText(Globales.buscar);
     }
 
-}
+    private void Limpiar() {
+        txtUsuario.setText("");
+        txtClave.setText("");
+    }
 
+    public void MostrarUsuarios() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("id");
+        model.addColumn("empleado_id");
+        model.addColumn("nombre");
+        model.addColumn("usuario");
+        model.addColumn("clave");
+        TablaUsuarios.setModel(model);
+        String[] datos = new String[5];
+        try {
+            Statement st = conectar.createStatement();
+            ResultSet rs2 = st.executeQuery(Queries.usuariosAll);
+            while(rs2.next()){
+                datos[0] = rs2.getString("id");
+                datos[1] = rs2.getString("empleado_id");
+                datos[2] = rs2.getString("nombre");
+                datos[3] = rs2.getString("usuario");
+                datos[4] = rs2.getString("clave");
+                model.addRow(datos);
+            }
+            TablaUsuarios.setModel(model);
+        } catch (SQLException ex) {
+            Logger.getLogger(VerEmpleados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+}

@@ -7,14 +7,28 @@
 package interfaces;
 
 import clases.Globales;
+import clases.Queries;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
+import modelo.Conexion;
 
 /**
  *
  * @author mcsmo
  */
 public class Huespedes extends javax.swing.JDialog {
-
+    PreparedStatement ps, pst;
+    Statement instruccion;
+    ResultSet rs;
+    Conexion conn = new Conexion();
+    Connection conectar = conn.getConnection();
     /** Creates new form Huespedes */
     public Huespedes(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -24,6 +38,7 @@ public class Huespedes extends javax.swing.JDialog {
         setIconImage(new ImageIcon(getClass().getResource("/images/selloHotel.png")).getImage());
         this.setLocationRelativeTo(null);
         AsignarNombres();
+        VerHuespedes();
     }
     
     public void MaximizarJDialog(){
@@ -50,7 +65,7 @@ public class Huespedes extends javax.swing.JDialog {
         lblCheckOut = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaHuesped = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -144,10 +159,10 @@ public class Huespedes extends javax.swing.JDialog {
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setBackground(new java.awt.Color(255, 255, 255));
-        jTable1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        jTable1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaHuesped.setBackground(new java.awt.Color(255, 255, 255));
+        TablaHuesped.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        TablaHuesped.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        TablaHuesped.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -158,8 +173,9 @@ public class Huespedes extends javax.swing.JDialog {
                 "Id", "Nombre", "Telefono", "Habitacion", "Check-In", "Check-Out"
             }
         ));
-        jTable1.setSelectionBackground(new java.awt.Color(102, 153, 255));
-        jScrollPane1.setViewportView(jTable1);
+        TablaHuesped.setRowHeight(20);
+        TablaHuesped.setSelectionBackground(new java.awt.Color(102, 153, 255));
+        jScrollPane1.setViewportView(TablaHuesped);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -263,6 +279,7 @@ public class Huespedes extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaHuesped;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JPanel jPanel1;
@@ -271,7 +288,6 @@ public class Huespedes extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JButton lblCheckOut;
     private javax.swing.JLabel lblHuespedes;
     private javax.swing.JTextField txtBuscar;
@@ -282,7 +298,37 @@ public class Huespedes extends javax.swing.JDialog {
         btnBuscar.setText(Globales.buscar);
         btnAtras.setText(Globales.atras);
         lblCheckOut.setText(Globales.salidaOk);
-        
     }
     
+    private void Limpiar(){
+        txtBuscar.setText("");
+    }
+    
+    private void VerHuespedes(){
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("id");
+        model.addColumn("nombre");
+        model.addColumn("telefono");
+        model.addColumn("habitacion");
+        model.addColumn("checkin");
+        model.addColumn("checkout");
+        TablaHuesped.setModel(model);
+        String[] datos = new String[7];
+        try {
+            Statement st = conectar.createStatement();
+            ResultSet rs2 = st.executeQuery(Queries.huespedesAll);
+            while(rs2.next()){
+                datos[0] = rs2.getString("id");
+                datos[1] = rs2.getString("nombre");
+                datos[2] = rs2.getString("telefono");
+                datos[3] = rs2.getString("habitacion");
+                datos[4] = rs2.getString("checkin");
+                datos[5] = rs2.getString("checkout");
+                model.addRow(datos);
+            }
+            TablaHuesped.setModel(model);
+        } catch (SQLException ex) {
+            Logger.getLogger(Empleados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

@@ -7,7 +7,18 @@
 package interfaces;
 
 import clases.Globales;
+import clases.Queries;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import modelo.Conexion;
 
 /**
  *
@@ -15,7 +26,12 @@ import javax.swing.ImageIcon;
  */
 public final class Habitaciones extends javax.swing.JDialog {
 
-    /** Creates new form Habitaciones */
+    PreparedStatement ps, pst;
+    Statement instruccion;
+    ResultSet rs;
+    Conexion conn = new Conexion();
+    Connection conectar = conn.getConnection();
+    
     public Habitaciones(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -24,6 +40,7 @@ public final class Habitaciones extends javax.swing.JDialog {
         setIconImage(new ImageIcon(getClass().getResource("/images/selloHotel.png")).getImage());
         this.setLocationRelativeTo(null);
         AsignarNombres();
+        MostrarHabitacion();
     }
     
     public void MaximizarJDialog(){
@@ -51,17 +68,17 @@ public final class Habitaciones extends javax.swing.JDialog {
         btnActualizar = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        txtHabitacion = new javax.swing.JTextField();
+        txtDesc = new javax.swing.JTextField();
+        sTipoHabitacion = new javax.swing.JComboBox<>();
+        sNoCamas = new javax.swing.JComboBox<>();
+        sEstado = new javax.swing.JComboBox<>();
         btnAgregar = new javax.swing.JButton();
-        jComboBox4 = new javax.swing.JComboBox<>();
+        sPersonasP = new javax.swing.JComboBox<>();
         btnElminar = new javax.swing.JButton();
         txtPrecio = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaHabitacion = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -166,32 +183,32 @@ public final class Habitaciones extends javax.swing.JDialog {
 
         jPanel5.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTextField1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Nombre de Habitación", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        txtHabitacion.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtHabitacion.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Nombre de Habitación", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
-        jTextField2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jTextField2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Descripción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        txtDesc.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtDesc.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Descripción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
-        jComboBox1.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Tipo de Habitación", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        sTipoHabitacion.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        sTipoHabitacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sTipoHabitacion.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Tipo de Habitación", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
-        jComboBox2.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox2.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "No. Camas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        sNoCamas.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        sNoCamas.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sNoCamas.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "No. Camas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
-        jComboBox3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Estado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        sEstado.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        sEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sEstado.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Estado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
         btnAgregar.setBackground(new java.awt.Color(0, 102, 51));
         btnAgregar.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Agregar.png"))); // NOI18N
 
-        jComboBox4.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)), "Personas Permitidas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 18))); // NOI18N
+        sPersonasP.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        sPersonasP.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sPersonasP.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)), "Personas Permitidas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 18))); // NOI18N
 
         btnElminar.setBackground(new java.awt.Color(204, 0, 51));
         btnElminar.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
@@ -208,23 +225,23 @@ public final class Habitaciones extends javax.swing.JDialog {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+                    .addComponent(txtDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jTextField1)
+                        .addComponent(txtHabitacion)
                         .addGap(18, 18, 18)
                         .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sPersonasP, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sTipoHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(56, 56, 56)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(btnElminar, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(sNoCamas, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(55, 55, 55)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox3, 0, 270, Short.MAX_VALUE))
+                    .addComponent(sEstado, 0, 270, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -233,27 +250,27 @@ public final class Habitaciones extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-                        .addComponent(jComboBox1))
+                        .addComponent(txtHabitacion, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                        .addComponent(sTipoHabitacion))
                     .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jComboBox3)
-                        .addComponent(jComboBox2))
+                        .addComponent(sEstado)
+                        .addComponent(sNoCamas))
                     .addComponent(txtPrecio))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                    .addComponent(txtDesc, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
                     .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnElminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox4))
+                    .addComponent(sPersonasP))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setBackground(new java.awt.Color(255, 255, 255));
-        jTable1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        jTable1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaHabitacion.setBackground(new java.awt.Color(255, 255, 255));
+        TablaHabitacion.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        TablaHabitacion.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        TablaHabitacion.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
                 {null, null, null, null, null, null},
@@ -264,8 +281,9 @@ public final class Habitaciones extends javax.swing.JDialog {
                 "ID", "Habitación", "Tipo de Habitacion", "No. de Camas", "Descripción", "Estado"
             }
         ));
-        jTable1.setSelectionBackground(new java.awt.Color(102, 153, 255));
-        jScrollPane1.setViewportView(jTable1);
+        TablaHabitacion.setRowHeight(20);
+        TablaHabitacion.setSelectionBackground(new java.awt.Color(102, 153, 255));
+        jScrollPane1.setViewportView(TablaHabitacion);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -374,16 +392,13 @@ public final class Habitaciones extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaHabitacion;
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnElminar;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JComboBox<String> jComboBox4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -391,11 +406,14 @@ public final class Habitaciones extends javax.swing.JDialog {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel lblHabitaciones;
+    private javax.swing.JComboBox<String> sEstado;
+    private javax.swing.JComboBox<String> sNoCamas;
+    private javax.swing.JComboBox<String> sPersonasP;
+    private javax.swing.JComboBox<String> sTipoHabitacion;
     private javax.swing.JTextField txtBuscar;
+    private javax.swing.JTextField txtDesc;
+    private javax.swing.JTextField txtHabitacion;
     private javax.swing.JTextField txtPrecio;
     // End of variables declaration//GEN-END:variables
     
@@ -407,5 +425,43 @@ public final class Habitaciones extends javax.swing.JDialog {
         btnAgregar.setText(Globales.agregar);
         btnElminar.setText(Globales.eliminar);
         btnEditar.setText(Globales.editar);
+    }
+    
+    public void Limpiar(){
+        txtHabitacion.setText("");
+        txtPrecio.setText("");
+        txtDesc.setText("");
+    }
+    
+    public void MostrarHabitacion(){
+      DefaultTableModel modelo = new DefaultTableModel();   
+      modelo.addColumn("id");
+      modelo.addColumn("habitacion");
+      modelo.addColumn("tipo_habitacion");
+      modelo.addColumn("no_camas");
+      modelo.addColumn("no_personas");
+      modelo.addColumn("precio");
+      modelo.addColumn("descripcion");
+      modelo.addColumn("estado");
+      TablaHabitacion.setModel(modelo);
+      String[] datos = new String[8];
+      try{
+          Statement st = conectar.createStatement();
+          ResultSet rs2 = st.executeQuery(Queries.habitacionAll);
+          while(rs2.next()){
+              datos[0] = rs2.getString("id");
+              datos[1] = rs2.getString("habitacion");
+              datos[2] = rs2.getString("tipo_habitacion");
+              datos[3] = rs2.getString("no_camas");
+              datos[4] = rs2.getString("no_personas");
+              datos[5] = rs2.getString("precio");
+              datos[6] = rs2.getString("descripcion");
+              datos[7] = rs2.getString("estado");
+              modelo.addRow(datos);
+          }
+          TablaHabitacion.setModel(modelo);
+      } catch (SQLException ex) {
+            Logger.getLogger(Habitaciones.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

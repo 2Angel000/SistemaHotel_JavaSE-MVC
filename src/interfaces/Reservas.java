@@ -6,19 +6,34 @@
 package interfaces;
 
 import clases.Globales;
+import clases.Queries;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import modelo.Conexion;
 
 /**
  *
  * @author mcsmo
  */
 public final class Reservas extends javax.swing.JPanel {
-
+  PreparedStatement ps, pst;
+    Statement instruccion;
+    ResultSet rs;
+    Conexion conn = new Conexion();
+    Connection conectar = conn.getConnection();
     /**
      * Creates new form Reservas
      */
     public Reservas() {
         initComponents();
         AsignarNombres();
+        VerRegistros();
     }
 
     /**
@@ -35,7 +50,7 @@ public final class Reservas extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        TablaRegistros = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setPreferredSize(new java.awt.Dimension(1000, 418));
@@ -47,22 +62,42 @@ public final class Reservas extends javax.swing.JPanel {
 
         jScrollPane1.setFont(new java.awt.Font("Roboto", 0, 16)); // NOI18N
 
-        jTable1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-        jTable1.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        TablaRegistros.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
+        TablaRegistros.setFont(new java.awt.Font("Roboto", 0, 18)); // NOI18N
+        TablaRegistros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nombre", "Telefono", "Habitación", "Tipo de Habitación", "No. Camas", "No.Personas", "Precio", "Check-In", "Check-Out"
+                "id", "Nombre", "Telefono", "Habitación", "Tipo de Habitación", "No. Camas", "No.Personas", "Precio", "Check-In", "Check-Out"
             }
-        ));
-        jTable1.setRowHeight(20);
-        jTable1.setSelectionBackground(new java.awt.Color(153, 204, 255));
-        jScrollPane1.setViewportView(jTable1);
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, true, true, false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        TablaRegistros.setRowHeight(20);
+        TablaRegistros.setSelectionBackground(new java.awt.Color(153, 204, 255));
+        jScrollPane1.setViewportView(TablaRegistros);
+        if (TablaRegistros.getColumnModel().getColumnCount() > 0) {
+            TablaRegistros.getColumnModel().getColumn(0).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(1).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(2).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(3).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(4).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(5).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(6).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(7).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(8).setResizable(false);
+            TablaRegistros.getColumnModel().getColumn(9).setResizable(false);
+        }
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -118,16 +153,55 @@ public final class Reservas extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TablaRegistros;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblReservas;
     // End of variables declaration//GEN-END:variables
 
    public void AsignarNombres() {
         lblReservas.setText(Globales.Reservaciones);
     }
+   
+        
+      //id, nombre, telefono, habitacion, tipoH, No.Camas, No.Personas, Precio, Checkin,checkout
+     //s*f id | nombre ,telefono ,habitacion_id, precio,checkin, checkout,
+     private void VerRegistros(){
+         DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("id");
+        model.addColumn("nombre");
+        model.addColumn("telefono");
+        model.addColumn("habitacion");
+        model.addColumn("tipo_habitacion");
+        model.addColumn("no_camas");
+        model.addColumn("no_personas");
+        model.addColumn("precio");
+        model.addColumn("checkin");
+        model.addColumn("checkout");
+        TablaRegistros.setModel(model);
+        String[] datos = new String[10];
+        try {
+            Statement st = conectar.createStatement();
+            ResultSet rs2 = st.executeQuery(Queries.registrosAll);
+            while(rs2.next()){
+                datos[0] = rs2.getString("id");
+                datos[1] = rs2.getString("nombre");
+                datos[2] = rs2.getString("telefono");
+                datos[3] = rs2.getString("habitacion");
+                datos[4] = rs2.getString("tipo_habitacion");
+                datos[5] = rs2.getString("no_camas");
+                datos[6] = rs2.getString("no_personas");
+                datos[7] = rs2.getString("precio");
+                datos[8] = rs2.getString("checkin");
+                datos[9] = rs2.getString("checkout");
+                model.addRow(datos);
+            }
+            TablaRegistros.setModel(model);
+        } catch (SQLException ex) {
+            Logger.getLogger(Reservas.class.getName()).log(Level.SEVERE, null, ex);
+        }
+     }
    
 }

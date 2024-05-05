@@ -10,7 +10,7 @@ package clases;
  * @author mcsmo
  */
 public class Enviroment {
-        public static String url="jdbc:mysql://localhost:3306/hoteldb";
+        public static String url = "jdbc:mysql://localhost:3306/hoteldb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
         public static String user = "root";
         public static String pass = "13102000";
 }
