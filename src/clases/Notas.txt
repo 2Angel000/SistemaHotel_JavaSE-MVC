@@ -1,0 +1,97 @@
+BOTONES
+agregar
+eliminar
+modificar
+    actualizar (activo en modificar)
+guardar
+
+-Dashboard-
+Habitaciones
+Huespedes
+Solicitudes
+Empleados
+Cerrar Sesión
+
+- G. Habitaciones -
+
+Busqueda: input
+
+(CRUD)
+Tabla [
+Habitacion
+Tipo
+Camas
+Descripcion
+Estado: Disponible/Ocupada/Inhabilitada
+]
+
+- R. Hospedaje -
+
+Busqueda : input
+
+(Crud)
+Tabla[
+    Nombre
+    Telefono
+    Habitación
+    Tipo Hab
+    Cant. Camas
+    No. Personas
+    Monto
+    De:
+    A:
+    Check In
+    Check Out
+]
+
+
+- Mantenimiento - 
+
+    - Crear Solicitud -
+    Servicio: Fontaneria, Electricidad, Etc
+    Descripción del Problema
+    Área: [Habitaciones, Patio, Planta de Luz]
+    Habitación
+    
+    - Visualizar Solicitudes -
+    Cuadro 1 (Solicitudes):
+        Tabla[
+            Folio
+            Fecha
+            Servicio
+            Desc
+            Area
+            Hab     
+            Estado: Finalizada, En Proces, Sin Empezar
+        ]
+
+        Cuadro 2:
+        Marcar como Finalizado/Proceso
+
+
+- Registrar Empleados -
+    
+    - Agregar Empleado -
+        Nombre, AP, AM, Área, Tel, Fecha,D/M/A-NAC
+        Clave:
+           Area, 2 letras Nombre, 1 letra AP/AM
+           Mu-MIFM13102000
+           CONTRASEÑA: aleatorio
+
+
+    - Estado del Empleado -
+        Tabla[
+            Clave
+            Nombre
+            Contraseña
+            Estado
+        ]
+
+        Activar/desactivar Cuenta
+   
+    
+        
+
+
+- Cerrar Sesión -
+
