@@ -7,7 +7,6 @@ package interfaces;
 
 import clases.Globales;
 import clases.Queries;
-import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,6 +29,7 @@ public class Solicitudes extends javax.swing.JDialog {
     ResultSet rs;
     Conexion conn = new Conexion();
     Connection conectar = conn.getConnection();
+    Queries insert = new Queries();
 
     /**
      * Creates new form Solicitudes
@@ -71,7 +71,7 @@ public class Solicitudes extends javax.swing.JDialog {
         txtDescripcion = new javax.swing.JTextField();
         sServicio = new javax.swing.JComboBox<>();
         sArea = new javax.swing.JComboBox<>();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        sEstado = new javax.swing.JComboBox<>();
         btnAgregar = new javax.swing.JButton();
         btnEditar = new javax.swing.JButton();
         btnActualizar = new javax.swing.JButton();
@@ -167,7 +167,7 @@ public class Solicitudes extends javax.swing.JDialog {
         txtDescripcion.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Descripción del problema", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
         sServicio.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        sServicio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sServicio.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Electricidad", "Fontaneria", "Ventilacion", "WiFi", "Estacionamiento", "Habitaciones", "Limpieza", "Mantenimiento" }));
         sServicio.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Servicio", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
         sServicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -176,18 +176,23 @@ public class Solicitudes extends javax.swing.JDialog {
         });
 
         sArea.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        sArea.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sArea.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Areas Comunes", "Baños", "Estacionamiento", "Habitaciones", "Lavanderia", "Lobby", "Pasillos", "Recepcion" }));
         sArea.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Area", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
-        jComboBox3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Estado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        sEstado.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        sEstado.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "En Proceso", "Pendiente", "Finalizado" }));
+        sEstado.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Estado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
         btnAgregar.setBackground(new java.awt.Color(0, 102, 51));
         btnAgregar.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
         btnAgregar.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/aceptar.png"))); // NOI18N
         btnAgregar.setText("jButton1");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnEditar.setBackground(new java.awt.Color(0, 51, 102));
         btnEditar.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
@@ -216,7 +221,7 @@ public class Solicitudes extends javax.swing.JDialog {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(sArea, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(sEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(txtDescripcion))
                     .addGroup(jPanel5Layout.createSequentialGroup()
@@ -238,7 +243,7 @@ public class Solicitudes extends javax.swing.JDialog {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(txtDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jComboBox3)
+                    .addComponent(sEstado)
                     .addComponent(sArea)
                     .addComponent(sServicio))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -338,6 +343,24 @@ public class Solicitudes extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_sServicioActionPerformed
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        try{
+            String insertQuery, servicio, area, estado;
+            String desc = txtDescripcion.getText();
+            servicio = sServicio.getItemAt(sServicio.getSelectedIndex());
+            area = sArea.getItemAt(sArea.getSelectedIndex());
+            estado = sEstado.getItemAt(sEstado.getSelectedIndex());
+            insertQuery = insert.InsertSolicitud(servicio, area, desc, estado);
+            instruccion = conectar.createStatement();
+            instruccion.execute(insertQuery);
+            VerSolicitudes();
+            Limpiar();
+            conectar.close();
+        }catch(SQLException ex){
+            Logger.getLogger(Solicitudes.class.getName()).log(Level.SEVERE,null,ex);
+        }
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -388,7 +411,6 @@ public class Solicitudes extends javax.swing.JDialog {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -398,6 +420,7 @@ public class Solicitudes extends javax.swing.JDialog {
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblSolicitudes;
     private javax.swing.JComboBox<String> sArea;
+    private javax.swing.JComboBox<String> sEstado;
     private javax.swing.JComboBox<String> sServicio;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtDescripcion;

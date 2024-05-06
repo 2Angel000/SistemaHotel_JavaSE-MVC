@@ -15,6 +15,7 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Conexion;
 
@@ -23,11 +24,14 @@ import modelo.Conexion;
  * @author mcsmo
  */
 public class Empleados extends javax.swing.JDialog {
+
     PreparedStatement ps, pst;
     Statement instruccion;
     ResultSet rs;
     Conexion conn = new Conexion();
     Connection conectar = conn.getConnection();
+    Queries insert = new Queries();
+
     /**
      * Creates new form Empleados
      */
@@ -68,7 +72,7 @@ public class Empleados extends javax.swing.JDialog {
         jPanel5 = new javax.swing.JPanel();
         txtNombre = new javax.swing.JTextField();
         txtApellido = new javax.swing.JTextField();
-        jComboBox3 = new javax.swing.JComboBox<>();
+        sTipoE = new javax.swing.JComboBox<>();
         txtTelefono = new javax.swing.JTextField();
         btnEliminar = new javax.swing.JButton();
         btnAgregar = new javax.swing.JButton();
@@ -175,9 +179,9 @@ public class Empleados extends javax.swing.JDialog {
         txtApellido.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         txtApellido.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Apellido", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
-        jComboBox3.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Recepcionista", "Recursos Humanos", "Mucama", "Mantenimiento", "Gerente", "Guardia", "Intendente" }));
-        jComboBox3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Tipo Empleado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
+        sTipoE.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        sTipoE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Recepcionista", "Recursos Humanos", "Mucama", "Mantenimiento", "Gerente", "Guardia", "Intendente" }));
+        sTipoE.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Tipo Empleado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 16))); // NOI18N
 
         txtTelefono.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         txtTelefono.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Telefono", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 1, 18))); // NOI18N
@@ -195,6 +199,11 @@ public class Empleados extends javax.swing.JDialog {
         btnAgregar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Agregar.png"))); // NOI18N
         btnAgregar.setText("jButton3");
         btnAgregar.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 0, 0, new java.awt.Color(0, 0, 0)));
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
 
         btnActualizar.setBackground(new java.awt.Color(102, 0, 153));
         btnActualizar.setFont(new java.awt.Font("Roboto", 1, 18)); // NOI18N
@@ -210,7 +219,7 @@ public class Empleados extends javax.swing.JDialog {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sTipoE, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(txtNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 290, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(95, 95, 95)
@@ -238,7 +247,7 @@ public class Empleados extends javax.swing.JDialog {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnAgregar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jComboBox3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)))
+                    .addComponent(sTipoE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 66, Short.MAX_VALUE)))
         );
 
         jScrollPane1.setBackground(new java.awt.Color(255, 255, 255));
@@ -325,6 +334,26 @@ public class Empleados extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        try {
+            String tipo, insertQuery;
+            String nombre = txtNombre.getText();
+            String apellido = txtApellido.getText();
+            String telefono = txtTelefono.getText();
+            tipo = sTipoE.getItemAt(sTipoE.getSelectedIndex());//OK          
+            insertQuery = insert.InsertEmpleado(nombre, apellido, telefono, tipo);
+            instruccion = conectar.createStatement();
+            System.out.println("QUERY: "+insertQuery);
+            instruccion.execute(insertQuery);
+            VerEmpleados();
+            Limpiar();
+            conectar.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(Empleados.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_btnAgregarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -375,7 +404,6 @@ public class Empleados extends javax.swing.JDialog {
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnEliminar;
-    private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -384,6 +412,7 @@ public class Empleados extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblEmpleados;
+    private javax.swing.JComboBox<String> sTipoE;
     private javax.swing.JTextField txtApellido;
     private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtNombre;
@@ -400,12 +429,12 @@ private void AsignarNombres() {
     }
 
     private void Limpiar() {
-      txtNombre.setText("");
-      txtApellido.setText("");
-      txtTelefono.setText("");
+        txtNombre.setText("");
+        txtApellido.setText("");
+        txtTelefono.setText("");
     }
-    
-    private void VerEmpleados(){
+
+    private void VerEmpleados() {
         DefaultTableModel model = new DefaultTableModel();
         model.addColumn("id");
         model.addColumn("nombre");
@@ -418,7 +447,7 @@ private void AsignarNombres() {
         try {
             Statement st = conectar.createStatement();
             ResultSet rs2 = st.executeQuery(Queries.empleadoAll);
-            while(rs2.next()){
+            while (rs2.next()) {
                 datos[0] = rs2.getString("id");
                 datos[1] = rs2.getString("nombre");
                 datos[2] = rs2.getString("apellido");

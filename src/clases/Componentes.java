@@ -5,9 +5,16 @@
  */
 package clases;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
+import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
+import modelo.Conexion;
 
 /**
  *
@@ -27,7 +34,8 @@ public class Componentes {
         return new SimpleDateFormat("dd-MM-yyyy").format(fecha);
     }
     
- 
-    
-
+    public static String FechaActualDB(){
+        Date fecha = new Date();
+        return new SimpleDateFormat("yyyy-MM-dd").format(fecha);
+    }
 }

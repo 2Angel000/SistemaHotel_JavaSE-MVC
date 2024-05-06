@@ -7,6 +7,7 @@ package interfaces;
 
 import clases.Componentes;
 import clases.Globales;
+import clases.Queries;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Conexion;
 
@@ -22,17 +24,22 @@ import modelo.Conexion;
  * @author mcsmo
  */
 public final class RegHues extends javax.swing.JPanel {
-  PreparedStatement ps, pst;
+
+    PreparedStatement ps, pst;
     Statement instruccion;
     ResultSet rs;
     Conexion conn = new Conexion();
     Connection conectar = conn.getConnection();
+    Queries insert = new Queries();
+    Reservas reservas = new Reservas();
+
     /**
      * Creates new form RegHues
      */
     public RegHues() {
         initComponents();
         AsignarNombres();
+        RellenarCombo();
     }
 
     /**
@@ -51,8 +58,8 @@ public final class RegHues extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         txtNombre = new javax.swing.JTextField();
         sHabitacion = new javax.swing.JComboBox<>();
-        txtCantCamas = new javax.swing.JTextField();
-        txtCosto = new javax.swing.JTextField();
+        txtNoCamas = new javax.swing.JTextField();
+        txtPrecio = new javax.swing.JTextField();
         txtCheckIn = new javax.swing.JTextField();
         txtCheckOut = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
@@ -92,23 +99,39 @@ public final class RegHues extends javax.swing.JPanel {
 
         sHabitacion.setBackground(new java.awt.Color(255, 255, 255));
         sHabitacion.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        sHabitacion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         sHabitacion.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Habitación", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
+        sHabitacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sHabitacionActionPerformed(evt);
+            }
+        });
 
-        txtCantCamas.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        txtCantCamas.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "No. Camas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
-        txtCantCamas.setEnabled(false);
+        txtNoCamas.setBackground(new java.awt.Color(255, 255, 255));
+        txtNoCamas.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtNoCamas.setForeground(new java.awt.Color(0, 0, 0));
+        txtNoCamas.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "No. Camas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
+        txtNoCamas.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtNoCamas.setEnabled(false);
+        txtNoCamas.setSelectionColor(new java.awt.Color(0, 153, 153));
 
-        txtCosto.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        txtCosto.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Precio", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
-        txtCosto.setEnabled(false);
+        txtPrecio.setBackground(new java.awt.Color(255, 255, 255));
+        txtPrecio.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtPrecio.setForeground(new java.awt.Color(0, 0, 0));
+        txtPrecio.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Precio", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
+        txtPrecio.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txtPrecio.setEnabled(false);
+        txtPrecio.setSelectionColor(new java.awt.Color(0, 153, 153));
 
+        txtCheckIn.setBackground(new java.awt.Color(255, 255, 255));
         txtCheckIn.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtCheckIn.setForeground(new java.awt.Color(0, 0, 0));
         txtCheckIn.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Check-In", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
+        txtCheckIn.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtCheckIn.setEnabled(false);
+        txtCheckIn.setSelectionColor(new java.awt.Color(0, 153, 153));
 
         txtCheckOut.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
-        txtCheckOut.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Check-Out", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
+        txtCheckOut.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Check-Out (AAAA-MM-DD)", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -149,6 +172,11 @@ public final class RegHues extends javax.swing.JPanel {
         btnEnviar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/send.png"))); // NOI18N
         btnEnviar.setText("jButton1");
         btnEnviar.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/images/enviando.png"))); // NOI18N
+        btnEnviar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEnviarActionPerformed(evt);
+            }
+        });
 
         txtTelefono.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
         txtTelefono.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Telefono", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 18))); // NOI18N
@@ -158,13 +186,21 @@ public final class RegHues extends javax.swing.JPanel {
             }
         });
 
+        txtTipoHabitacion.setBackground(new java.awt.Color(255, 255, 255));
         txtTipoHabitacion.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtTipoHabitacion.setForeground(new java.awt.Color(0, 0, 0));
         txtTipoHabitacion.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "Tipo de Habitación", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 16))); // NOI18N
+        txtTipoHabitacion.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtTipoHabitacion.setEnabled(false);
+        txtTipoHabitacion.setSelectionColor(new java.awt.Color(0, 153, 153));
 
+        txtPersonasP.setBackground(new java.awt.Color(255, 255, 255));
         txtPersonasP.setFont(new java.awt.Font("Roboto", 0, 14)); // NOI18N
+        txtPersonasP.setForeground(new java.awt.Color(0, 0, 0));
         txtPersonasP.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 0, 0)), "No. Personas", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Roboto", 0, 16))); // NOI18N
+        txtPersonasP.setDisabledTextColor(new java.awt.Color(0, 0, 0));
         txtPersonasP.setEnabled(false);
+        txtPersonasP.setSelectionColor(new java.awt.Color(0, 153, 153));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -174,7 +210,7 @@ public final class RegHues extends javax.swing.JPanel {
                 .addGap(37, 37, 37)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtCantCamas)
+                        .addComponent(txtNoCamas)
                         .addComponent(txtNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
                     .addComponent(txtCheckIn, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,7 +222,7 @@ public final class RegHues extends javax.swing.JPanel {
                         .addGap(91, 91, 91)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(sHabitacion, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(68, 68, 68)
                         .addComponent(txtCheckOut)))
@@ -198,7 +234,7 @@ public final class RegHues extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(419, 419, 419)
                 .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 450, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(564, Short.MAX_VALUE))
+                .addContainerGap(603, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -216,8 +252,8 @@ public final class RegHues extends javax.swing.JPanel {
                         .addGap(47, 47, 47)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtCosto, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtCantCamas, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
+                                .addComponent(txtPrecio, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtNoCamas, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
                             .addComponent(txtPersonasP, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(54, 54, 54)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -228,7 +264,7 @@ public final class RegHues extends javax.swing.JPanel {
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(70, 70, 70)
                 .addComponent(btnEnviar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(141, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -258,7 +294,7 @@ public final class RegHues extends javax.swing.JPanel {
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1445, Short.MAX_VALUE)))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1484, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -268,7 +304,7 @@ public final class RegHues extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 607, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -276,6 +312,69 @@ public final class RegHues extends javax.swing.JPanel {
     private void txtTelefonoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTelefonoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTelefonoActionPerformed
+
+    private void btnEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnviarActionPerformed
+        String insertQuery;
+    try {
+        String nombre = txtNombre.getText();
+        String telefono = txtTelefono.getText();
+        String checkout = txtCheckOut.getText();
+        //obteniendo el indice de hab
+        String nombreHabitacion = (String) sHabitacion.getSelectedItem();
+        instruccion = conectar.createStatement();
+        try (PreparedStatement st = conectar.prepareStatement(Queries.getIdHabitacion)) {
+            st.setString(1, nombreHabitacion);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                //obtener id
+                int idHabitacion = rs.getInt("id");
+                insertQuery = insert.InsertRegistro(nombre, telefono, idHabitacion, checkout);
+                instruccion.execute(insertQuery);
+                
+                // Eliminar la habitación seleccionada del ComboBox
+                sHabitacion.removeItem(nombreHabitacion);
+                
+                // Actualizar los registros en la tabla dentro del otro JPanel
+                reservas.VerRegistros();
+                
+                Limpiar();
+            } else {
+                JOptionPane.showMessageDialog(null, "La habitación seleccionada no se encontró en la base de datos");
+            }
+        }
+        conectar.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RegHues.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
+    }//GEN-LAST:event_btnEnviarActionPerformed
+
+    private void sHabitacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sHabitacionActionPerformed
+        try {
+            String nombreHabitacion = (String) sHabitacion.getSelectedItem();
+            try (PreparedStatement st = conectar.prepareStatement(Queries.getInfoHabitacion)) {
+                st.setString(1, nombreHabitacion);
+                ResultSet rs = st.executeQuery();
+
+                if (rs.next()) {
+                    String tipoHab = rs.getString("tipo_habitacion");
+                    String no_camas = rs.getString("no_camas");
+                    String no_personas = rs.getString("no_personas");
+                    String precio = rs.getString("precio");
+
+                    txtTipoHabitacion.setText(tipoHab);
+                    txtNoCamas.setText(no_camas);
+                    txtPersonasP.setText(no_personas);
+                    txtPrecio.setText(precio);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Habitacion inexistente");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(RegHues.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_sHabitacionActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -290,27 +389,46 @@ public final class RegHues extends javax.swing.JPanel {
     private javax.swing.JLabel lblNNoches;
     private javax.swing.JLabel lblRegistrarHuespedes;
     private javax.swing.JComboBox<String> sHabitacion;
-    private javax.swing.JTextField txtCantCamas;
     private javax.swing.JTextField txtCheckIn;
     private javax.swing.JTextField txtCheckOut;
-    private javax.swing.JTextField txtCosto;
+    private javax.swing.JTextField txtNoCamas;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPersonasP;
+    private javax.swing.JTextField txtPrecio;
     private javax.swing.JTextField txtTelefono;
     private javax.swing.JTextField txtTipoHabitacion;
     // End of variables declaration//GEN-END:variables
 
-       public void AsignarNombres() {
+    public void AsignarNombres() {
         lblRegistrarHuespedes.setText(Globales.RegHues);
         lblNNoches.setText(Globales.nNoches);
         btnEnviar.setText(Globales.enviar);
         txtCheckIn.setText(Componentes.FechaActual());
     }
-       
-     private void Limpiar(){
+
+    private void Limpiar() {
         txtNombre.setText("");
         txtTelefono.setText("");
-     }
+        txtTipoHabitacion.setText("");
+        txtNoCamas.setText("");
+        txtPersonasP.setText("");
+        txtPrecio.setText("");
+        txtCheckOut.setText("");
+    }
 
-       
+    public void RellenarCombo() {
+        try {
+            Statement st = conectar.createStatement();
+            ResultSet rs = st.executeQuery(Queries.noRegistroHab);
+            sHabitacion.removeAllItems();
+            //recorrer resultados y agregarlos al comboBox
+            while (rs.next()) {
+                String habitacion = rs.getString("habitacion");
+                sHabitacion.addItem(habitacion);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "hh");
+        }
+    }
+
 }

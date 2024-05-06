@@ -83,7 +83,7 @@ public final class Reservas extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        TablaRegistros.setRowHeight(20);
+        TablaRegistros.setRowHeight(21);
         TablaRegistros.setSelectionBackground(new java.awt.Color(153, 204, 255));
         jScrollPane1.setViewportView(TablaRegistros);
         if (TablaRegistros.getColumnModel().getColumnCount() > 0) {
@@ -168,7 +168,7 @@ public final class Reservas extends javax.swing.JPanel {
         
       //id, nombre, telefono, habitacion, tipoH, No.Camas, No.Personas, Precio, Checkin,checkout
      //s*f id | nombre ,telefono ,habitacion_id, precio,checkin, checkout,
-     private void VerRegistros(){
+     public void VerRegistros(){
          DefaultTableModel model = new DefaultTableModel();
         model.addColumn("id");
         model.addColumn("nombre");

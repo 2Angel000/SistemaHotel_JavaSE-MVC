@@ -289,7 +289,7 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="jComboBox3" max="32767" attributes="0"/>
+                              <Component id="sTipoE" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="txtNombre" min="-2" pref="290" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="95" max="-2" attributes="0"/>
@@ -324,7 +324,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btnEliminar" max="32767" attributes="0"/>
                               <Component id="btnAgregar" alignment="0" max="32767" attributes="0"/>
-                              <Component id="jComboBox3" alignment="1" pref="66" max="32767" attributes="0"/>
+                              <Component id="sTipoE" alignment="1" pref="66" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -365,7 +365,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox3">
+                <Component class="javax.swing.JComboBox" name="sTipoE">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Roboto" size="14" style="0"/>
@@ -456,6 +456,9 @@
                       </Border>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAgregarActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnActualizar">
                   <Properties>

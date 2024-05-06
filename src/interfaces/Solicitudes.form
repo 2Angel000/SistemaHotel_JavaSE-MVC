@@ -270,7 +270,7 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="sArea" min="-2" pref="260" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="jComboBox3" min="-2" pref="260" max="-2" attributes="0"/>
+                                  <Component id="sEstado" min="-2" pref="260" max="-2" attributes="0"/>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="txtDescripcion" max="32767" attributes="0"/>
                               </Group>
@@ -298,7 +298,7 @@
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   <Component id="txtDescripcion" min="-2" pref="60" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="jComboBox3" alignment="0" max="32767" attributes="0"/>
+                              <Component id="sEstado" alignment="0" max="32767" attributes="0"/>
                               <Component id="sArea" max="32767" attributes="0"/>
                               <Component id="sServicio" alignment="0" max="32767" attributes="0"/>
                           </Group>
@@ -338,11 +338,15 @@
                       <Font name="Roboto" size="14" style="0"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
+                      <StringArray count="8">
+                        <StringItem index="0" value="Electricidad"/>
+                        <StringItem index="1" value="Fontaneria"/>
+                        <StringItem index="2" value="Ventilacion"/>
+                        <StringItem index="3" value="WiFi"/>
+                        <StringItem index="4" value="Estacionamiento"/>
+                        <StringItem index="5" value="Habitaciones"/>
+                        <StringItem index="6" value="Limpieza"/>
+                        <StringItem index="7" value="Mantenimiento"/>
                       </StringArray>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -369,11 +373,15 @@
                       <Font name="Roboto" size="14" style="0"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
+                      <StringArray count="8">
+                        <StringItem index="0" value="Areas Comunes"/>
+                        <StringItem index="1" value="Ba&#xf1;os"/>
+                        <StringItem index="2" value="Estacionamiento"/>
+                        <StringItem index="3" value="Habitaciones"/>
+                        <StringItem index="4" value="Lavanderia"/>
+                        <StringItem index="5" value="Lobby"/>
+                        <StringItem index="6" value="Pasillos"/>
+                        <StringItem index="7" value="Recepcion"/>
                       </StringArray>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -391,17 +399,16 @@
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="jComboBox3">
+                <Component class="javax.swing.JComboBox" name="sEstado">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Roboto" size="14" style="0"/>
                     </Property>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="4">
-                        <StringItem index="0" value="Item 1"/>
-                        <StringItem index="1" value="Item 2"/>
-                        <StringItem index="2" value="Item 3"/>
-                        <StringItem index="3" value="Item 4"/>
+                      <StringArray count="3">
+                        <StringItem index="0" value="En Proceso"/>
+                        <StringItem index="1" value="Pendiente"/>
+                        <StringItem index="2" value="Finalizado"/>
                       </StringArray>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
@@ -435,6 +442,9 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="jButton1"/>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAgregarActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btnEditar">
                   <Properties>
